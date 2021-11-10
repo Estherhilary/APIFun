@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Fun</title>
+</head>
+
+<body>
+	<h1 style="text-align: center;"><em>7Timer!</em> Weather Forecast</h1>
+    <div id ="weather_data" style="background-color: #916cce; font-size: 20px;
+    width:30%; margin-left:36%; padding: 8px; border-radius: 8px; margin-bottom: 6%;"></div>
+	<div style="text-align: center;">The <em>7Timer!</em> API is a series of web-based
+        meteorological forecast products, which produces high-resolution forecast
+        for the entire globe<br>that covering about 1.5 million geographic points, and
+        would be updated four times a day. It also produces <br> specialized products for
+        users with different concentrations such as astronomy or meteorology.
+        <p>I found this API on this website: <a
+        href="https://mixedanalytics.com/blog/list-actually-free-open-no-auth-needed-apis/">https://mixedanalytics.com/blog/list-actually-free-open-no-auth-needed-apis/</a></p>
+        <p>The options I used for the API request is XMLHttpRequest():<br>1. I first made an
+        instance of the request object, and then set the URL for the AJAX request to be the
+        json file.<br>2. I then setup the event handler and checked for the
+        success state.<br><br> I also requested specific data from the API: the
+        temperature of the area. </p>
+    
+        Applications where this API would have been useful are: 
+        <br>1. The weather data would enlighten people on possible weatcher changes
+        and hence help them plan out transportation
+        <br>2. The weather data alert people to stay safe incase of bad weather
+        changes example storms
+    </div>
+
+    <script language='javascript'>
+        getForecast();
+        
+        function getForecast() {
+			/* Step 1: Make instance of request object...
+			...to make HTTP request after page is loaded*/
+			request = new XMLHttpRequest();
+			console.log("1 - request object created");
+ 
+			// Step 2: Set the URL for the AJAX request to be the JSON file
+ 
+		request.open("GET", "http://www.7timer.info/bin/api.pl?lon=113.17&lat=23.09&product=astro&output=json", true)
+
+			console.log("2 - opened request file");
+ 
+			// Step 3: set up event handler/callback
+
+			request.onreadystatechange = function() {
+				console.log("3 - readystatechange event fired.");
+ 
+				if (request.readyState == 4 && request.status == 200) {
+
+					// Step 5: wait for done + success
+					console.log("5 - response received");
+					result = request.responseText;
+					alert(result);
+					weather = JSON.parse(result);
+					
+					document.getElementById("weather_data").innerHTML = "Current temperature in Boston is: " + weather["dataseries"][0]["temp2m"] + " degrees celsius"; 
+				}
+
+				else if (request.readyState == 4 && request.status != 200) {
+
+					document.getElementById("weather_data").innerHTML = "Something is wrong!  Check the logs to see where this went off the rails";
+
+				}
+
+				else if (request.readyState == 3) {
+
+					document.getElementById("weather_data").innerHTML = "Too soon!  Try again";
+
+				}
+
+			}
+		// Step 4: fire off the HTTP request
+			request.send();
+			console.log("4 - Request sent");
+		}
+    </script>
+
+    
+</body>
+</html>
